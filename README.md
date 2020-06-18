@@ -1,6 +1,6 @@
 # wx-api
 微信公众号管理项目，基于Spring Boot快速公众号开发种子项目，提供公众号菜单、自动回复、公众号素材、简易CMS、等管理功能
-
+- 分支初衷：因为个人订阅号接口有限，所以在原有wx-api项目基础上，增加个人订阅号专用处理配置，用户只要把application.yml的category设置为Personal即可使用开发者回复功能，去掉该选项或改为business则可继续使用原有公众号，比如客服功能。
 ### [📖使用文档](https://www.yuque.com/nifury/wx) | [📊功能投票](https://wj.qq.com/s2/5896407/a381) | [🕓版本更新记录](https://www.yuque.com/nifury/wx/gd11wb) | [Github仓库](https://github.com/niefy/wx-api) | [码云仓库](https://gitee.com/niefy/wx-api)
 
 ## 项目说明

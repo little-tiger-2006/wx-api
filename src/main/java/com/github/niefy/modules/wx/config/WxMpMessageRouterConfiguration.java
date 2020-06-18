@@ -4,6 +4,8 @@ import com.github.niefy.modules.wx.handler.*;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +25,14 @@ public class WxMpMessageRouterConfiguration {
     private final ScanHandler scanHandler;
     private final UnsubscribeHandler unsubscribeHandler;
     private final SubscribeHandler subscribeHandler;
-
+    private final PersonalAccountMsgHandler personalSubscriptionAccountMsgHandler;
+    
+    
+    private final String personalMPCategory = "personal";
+    private final String bussinessMpCategory = "business";
+    @Value("${wx.mp.category:Business}")
+    private String mPCategory;
+    
     @Bean
     public WxMpMessageRouter messageRouter(WxMpService wxMpService) {
         final WxMpMessageRouter newRouter = new WxMpMessageRouter(wxMpService);
@@ -41,12 +50,18 @@ public class WxMpMessageRouterConfiguration {
         newRouter.rule().async(false).msgType(EVENT).event(UNSUBSCRIBE).handler(this.unsubscribeHandler).end();
         //扫描带参二维码事件
         newRouter.rule().async(false).msgType(EVENT).event(SCAN).handler(this.scanHandler).end();
-        //其他事件
+        // 其他事件
         newRouter.rule().async(false).msgType(EVENT).handler(this.nullHandler).end();
-
-        // 默认
-        newRouter.rule().async(false).handler(this.msgHandler).end();
-
+        //modify start:little-tiger,for personal mp
+        // 默认 ，可以所有操作在这里(msgHandler)新增 --------------
+        if(personalMPCategory.equalsIgnoreCase(mPCategory)) {
+        	newRouter.rule().async(false).handler(this.personalSubscriptionAccountMsgHandler).end();
+        }
+        else {
+        	//bussin mp
+        	 newRouter.rule().async(false).handler(this.msgHandler).end();
+        }
+        
         return newRouter;
     }
 }
